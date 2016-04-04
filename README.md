@@ -1,14 +1,8 @@
 
 >											  
->   Version 4       /                        /   /
->  -----------__---/__---__------__----__---/---/-
->   | /| /  /___) /   ) (_ `   /   ) /___) /   /  
->  _|/_|/__(___ _(___/_(__)___/___/_(___ _/___/___
->			   Free Content / Management System  
->						   /                     
->
+>### WEBSPELL 4.2.5 Stable
 >						   
->### NERV EDITION - powered by http://kevinwie.de
+>##### NERV EDITION - powered by http://kevinwie.de
 >
 
 ###############################################

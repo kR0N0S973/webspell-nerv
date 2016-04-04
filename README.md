@@ -1,14 +1,15 @@
 
-												  
-   Version 4       /                        /   /
-  -----------__---/__---__------__----__---/---/-
-   | /| /  /___) /   ) (_ `   /   ) /___) /   /  
-  _|/_|/__(___ _(___/_(__)___/___/_(___ _/___/___
-			   Free Content / Management System  
-						   /                     
-
-						   
-### NERV EDITION - powered by http://kevinwie.de
+>											  
+>   Version 4       /                        /   /
+>  -----------__---/__---__------__----__---/---/-
+>   | /| /  /___) /   ) (_ `   /   ) /___) /   /  
+>  _|/_|/__(___ _(___/_(__)___/___/_(___ _/___/___
+>			   Free Content / Management System  
+>						   /                     
+>
+>						   
+>### NERV EDITION - powered by http://kevinwie.de
+>
 
 ###############################################
 
@@ -20,7 +21,7 @@ many cool stuff by me and other colaborators.
 Here can you find the Stable version: http://webspell.org
 
 ###############################################
- 
+
 __Main features:__
 - Dynamic Navigations
 - Plugins

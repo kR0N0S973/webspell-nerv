@@ -471,6 +471,8 @@ else{
 	define('PAGETITLE', $GLOBALS['hp_title']);
 }
 
+$GLOBALS['user_language'] = getuserlanguage($userID);
+
 
 // -- RSS FEEDS -- //
 

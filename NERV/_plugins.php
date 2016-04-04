@@ -5,13 +5,14 @@ class plugins extends magi_class{
 	var $_plugin_folder = "";
 	var $_current_language = "";
 	
-	function plugins($plugin_folder = "", $user_language = ""){
+	function plugins($plugin_folder = ""){
 		$this->_plugin_folder = $plugin_folder;
 		
-		if($user_language != ""){
-			$this->_current_language = $user_language;
-		}else if($default_language!=""){
-			$this->_current_language = $default_language;
+		//$GLOBALS['userID'];
+		if($GLOBALS['user_language'] != ""){
+			$this->_current_language = $GLOBALS['user_language'];
+		}else if($GLOBALS['default_language']!=""){
+			$this->_current_language = $GLOBALS['default_language'];
 		}
 	}
 	
@@ -32,9 +33,8 @@ class plugins extends magi_class{
 	}
 	
 	private function isComplete($plugin_folder){
-		if($this->infoExists("plugins/$plugin_folder") && 
-		   $this->isInstalled($plugin_folder)){
-			// todo
+		$info = $this->getInfo($plugin_folder);
+		if($this->infoExists("plugins/$plugin_folder") && $info['installed']){
 			return true;
 		}
 		return false;
@@ -163,11 +163,13 @@ class plugins extends magi_class{
 		$menu = "";
 		if(count($plugins)>0){
 			foreach($plugins as $plugin){
-				$name = $plugin['plugin']['info']['name'];
-				$folder = $plugin['plugin']['info']['folder'];
-				$adminsite = $plugin['plugin']['admin'];
-				if(file_exists("plugins/$folder/$adminsite.php")){
-					$menu .= "<li><a href='admincenter.php?site=$adminsite'>$name</a></li>";
+				if($this->isComplete($plugin['plugin']['info']['folder'])){
+					$name = $plugin['plugin']['info']['name'];
+					$folder = $plugin['plugin']['info']['folder'];
+					$adminsite = $plugin['plugin']['admin'];
+					if(file_exists("plugins/$folder/$adminsite.php")){
+						$menu .= "<li><a href='admincenter.php?site=$adminsite'>$name</a></li>";
+					}
 				}
 			}
 		}
@@ -175,8 +177,13 @@ class plugins extends magi_class{
 		echo $menu;
 	}
 	
-	public function install(){
-		$plugin_folder = $this->_plugin_folder;
+	public function install($plugin_folder = ""){
+		if($plugin_folder==""){
+			$plugin_folder = $this->_plugin_folder;
+		}else{
+			$this->_plugin_folder = $plugin_folder;
+		}
+		
 		if(!$this->isInstalled()){
 			$plugin_path = "plugins/".$plugin_folder."/";
 			if(file_exists($plugin_path.$plugin_folder."_install.php")){
@@ -209,11 +216,41 @@ class plugins extends magi_class{
 		return false;
 	}
 	
-	public function isInstalled(){
-		$plugin_folder = $this->_plugin_folder;
+	public function uninstall($plugin_folder = ""){
+		if($plugin_folder==""){
+			$plugin_folder = $this->_plugin_folder;
+		}else{
+			$this->_plugin_folder = $plugin_folder;
+		}
+		if($this->isInstalled()){
+			$plugin_path = "plugins/".$plugin_folder."/";
+			$infos = $this->getInfo($plugin_folder);
+			$db_tables = $infos["tables"];
+			foreach($db_tables as $table){
+				$delete_query = "DROP TABLE IF EXISTS ".PREFIX.$table."";
+				if(!$result = $this->safe_query($delete_query)){
+					return false;
+				}
+			}
+			if($this->Delete_Folder('plugins/'.$plugin_folder.'/')){
+				return true;
+			}
+			return false;
+		}else{
+			echo "It is not installed.";
+		}
+		return false;
+	}
+	
+	public function isInstalled($plugin_folder = ""){
+		if($plugin_folder==""){
+			$plugin_folder = $this->_plugin_folder;
+		}else{
+			$this->_plugin_folder = $plugin_folder;
+		}
 		$json = $this->getInfo($plugin_folder);
 		$isInstalled = $json['installed'];
-		return $isInstalled;
+		return $isInstalled && !file_exists("../plugins/".$plugin_folder."/".$plugin_folder."_install.php");
 	}
 	
 	public function replaceLanguage($inputString){

@@ -93,5 +93,61 @@
 			";
 			echo $redirectstring;
 		}
+		
+		public function view_template($template, $section, $variables = array()){
+			$template = $this->get_Template_view($template, $section);
+			foreach($variables as $key=>$value){
+				$template = str_replace("__".$key, $value, $template);
+			}
+			$template = $GLOBALS['_language']->replace($template);
+			echo $template;
+		}
+		
+		private function get_Template_view($template, $section, $admin = false){
+			if($admin){
+				$template_file = "../templates/".$template.".html";
+			}else{
+				$template_file = "templates/".$template.".html";
+			}
+			if(file_exists($template_file)){
+				$file = file_get_contents($template_file);
+				$section = strtoupper($section);
+				$section_part = $this->get_string_between($file, "<!-- ".$section."_START -->", "<!-- ".$section."_END -->");
+				return $section_part;
+			}
+			return false;
+		}
+		
+		function Delete_Folder($path)
+		{
+			if (is_dir($path) === true)
+			{
+				$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::CHILD_FIRST);
+
+				foreach ($files as $file)
+				{
+					if (in_array($file->getBasename(), array('.', '..')) !== true)
+					{
+						if ($file->isDir() === true)
+						{
+							rmdir($file->getPathName());
+						}
+
+						else if (($file->isFile() === true) || ($file->isLink() === true))
+						{
+							unlink($file->getPathname());
+						}
+					}
+				}
+
+				return rmdir($path);
+			}
+			else if ((is_file($path) === true) || (is_link($path) === true))
+			{
+				return unlink($path);
+			}
+		return false;
+		}
+		
 	}
 ?>
